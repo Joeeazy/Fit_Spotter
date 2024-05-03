@@ -1,8 +1,9 @@
-from flask import Flask, request, abort
+from flask import Flask, request, session
 from config import  AppConfig
 from flask.json import jsonify
 from user_model import db, User
 from flask_bcrypt import Bcrypt
+from flask_session import Session
 
 app = Flask(__name__)
 #get the configs
@@ -11,12 +12,16 @@ app.config.from_object(AppConfig)
 #hashes passwords
 bcrypt = Bcrypt(app)
 
+#server sessions
+server_session = Session(app)
+
 #initialize app instance
 db.init_app(app)
 
 #push app context
 with app.app_context():
     db.create_all()
+
 
 
 # function to create a new user's account
@@ -72,10 +77,33 @@ def login_user():
             "error": "Unauthorized"
             }), 401
 
+    # if everything mathces store the user id in a session token 
+    session["user_exists_id"] = user_exists.id
+
+
     # if everything works return user
     return jsonify({
         "id": user_exists.id,
         "email": user_exists.email
+    })
+
+# get current_user function
+@app.route("/current_user", methods=["GET"])
+def get_current_user():
+    user_exists_id = session.get("user_exists_id") #returns true if there's an id and flase if not
+
+    #if no current user return unauthorized
+    if not user_exists_id:
+        return jsonify({
+            "error": "unauthorized"
+        }), 401
+
+
+    current_user = User.query.filter_by(id = user_exists_id).first()
+
+    return jsonify({
+        "id": current_user.id,
+        "email": current_user.email
     })
 
 if(__name__) == "__main__":
