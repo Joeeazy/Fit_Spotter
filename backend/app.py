@@ -28,7 +28,7 @@ def register_user():
     #check if user exists with the email
     user_exists = User.query.filter_by(email=email).first() is not None #returns true if user exists
 
-    #if user exists don't create account abort
+    #if user exists don't create account abort wwith status 409 conflict
     if user_exists:
         return jsonify({
             "error": "User already exists"
@@ -50,14 +50,33 @@ def register_user():
         "email": new_user.email
     })
 
+# function to login user
+@app.route("/login", methods=["POST"])
+def login_user():
+    #get email & password
+    email = request.json["email"]
+    password = request.json["password"]
 
+    #check if the user exists in the db
+    user_exists = User.query.filter_by(email=email).first()  
 
+    # if user doesnt exist return unauthorized with status code 401
+    if user_exists is None:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
 
+    #else if the user exists check if passwords match!! if it doesn't match return unauth0rized
+    if not bcrypt.check_password_hash(user_exists.password, password):
+        return jsonify({
+            "error": "Unauthorized"
+            }), 401
 
-
-
-
-
+    # if everything works return user
+    return jsonify({
+        "id": user_exists.id,
+        "email": user_exists.email
+    })
 
 if(__name__) == "__main__":
     app.run(debug=True)
