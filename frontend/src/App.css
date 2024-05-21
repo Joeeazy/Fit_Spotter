@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scroll-behaviour: smooth;
+}
+.landingpage {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("./assets/img1.jpg");
+  /*background: linear-gradient(135deg, #8a2387, #e94057, #f27121);*/
+  min-height: 100vh;
+  width: 100vw;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.content-wrapper {
+  position: fixed; /* Fix the content wrapper */
+  top: 0; /* Align content wrapper to top of viewport */
+  left: 0; /* Align content wrapper to left of viewport */
+  width: 100%; /* Occupy full width of viewport */
+  height: 100%; /* Occupy full height of viewport */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+}
+.loginpage {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("./assets/img1.jpg");
+  /*background: linear-gradient(135deg, #8a2387, #e94057, #f27121);*/
+  /* min-height: 100vh;
+  width: 100vw; */
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
